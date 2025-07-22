@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserService {
 		List<User> list = this.userRepository.findAll();
 		
 		List<User> ratedList = list.stream().map(user -> {
-			Rating[] ratingByUser = restTemplate.getForObject("http://localhost:8083/rating/ratingByUser/" + user.getId(),
+			Rating[] ratingByUser = restTemplate.getForObject("http://Rating-Service/rating/ratingByUser/" + user.getId(),
 					Rating[].class);
 			 
 			
 			List<Rating> ratingList = Arrays.stream(ratingByUser).map(rating -> {
 				// Fetch hotel by hotelI
 				ResponseEntity<Hotel> response = restTemplate
-						.getForEntity("http://localhost:8082/hotel/" + rating.getHotelId(), Hotel.class);
+						.getForEntity("http://Hotel-Service/hotel/" + rating.getHotelId(), Hotel.class);
 				Hotel hotel = response.getBody();
 
 				// set hotel details to the rating
@@ -75,13 +75,13 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
 		// Fetch ratings for this user
-		Rating[] ratingByUser = restTemplate.getForObject("http://localhost:8083/rating/ratingByUser/" + user.getId(),
+		Rating[] ratingByUser = restTemplate.getForObject("http://Rating-Service/rating/ratingByUser/" + user.getId(),
 				Rating[].class);
 
 		List<Rating> ratingList = Arrays.stream(ratingByUser).map(rating -> {
 			// Fetch hotel by hotelI
 			ResponseEntity<Hotel> response = restTemplate
-					.getForEntity("http://localhost:8082/hotel/" + rating.getHotelId(), Hotel.class);
+					.getForEntity("http://Hotel-Service/hotel/" + rating.getHotelId(), Hotel.class);
 			Hotel hotel = response.getBody();
 
 			// set hotel details to the rating
